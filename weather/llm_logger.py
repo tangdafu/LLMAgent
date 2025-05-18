@@ -28,7 +28,7 @@ async def chat_proxy(request: Request):
     # 获取客户端请求数据
     client_data = await request.json()
 
-    logger.log("\ncline请求\n：")
+    logger.log("\ncline请求：\n")
     if 'messages' in client_data:
         for i in range(message_num, len(client_data['messages'])):
             role = client_data['messages'][i]['role']
@@ -36,8 +36,8 @@ async def chat_proxy(request: Request):
             logger.log(f"{role}:\n{content}\n")
         message_num = len(client_data['messages'])
 
-    logger.log("\n模型返回\n：")
-    logger.log("\nassistant\n：")
+    logger.log("\n模型返回：\n")
+    logger.log("\nassistant：\n")
     # 构建Ollama请求
     ollama_url = f"{OLLAMA_BASE_URL}/api/chat"
     headers = {"Content-Type": "application/json"}
@@ -46,6 +46,7 @@ async def chat_proxy(request: Request):
     is_stream = client_data.get("stream", False)
     
     try:
+        message_num = message_num + 1
         if is_stream:
             # 流式响应处理
             return StreamingResponse(
